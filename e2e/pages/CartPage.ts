@@ -15,16 +15,12 @@ export class CartPage {
     this.couponInput = page.locator('form, div').filter({ has: page.getByRole('button', { name: /aplicar cupom/i }) }).locator('input');
     this.applyCouponButton = page.getByRole('button', { name: /aplicar cupom/i });
     
-    // Botão +
     this.increaseButton = page.locator('button').filter({ hasText: '+' }).first();
     
-    // O elemento com o número 1 fica ao lado do botão + no mesmo container do contador
     this.itemQuantity = page.locator('button:has-text("+")').locator('xpath=preceding-sibling::*[1] | xpath=../span | xpath=../p').first();
 
-    // Mensagem de frete / subtotal
     this.freeShippingLabel = page.getByText(/r\$\s?0,00|grátis/i).first();
     
-    // Preço do produto
     this.unitPriceLabel = page.getByText(/r\$\s?\d+[,.]\d{2}/i).first();
   }
 
@@ -40,10 +36,8 @@ export class CartPage {
   async increaseQuantity() {
     await this.increaseButton.waitFor({ state: 'visible' });
     
-    // Clica no botão de incremento
     await this.increaseButton.click();
     
-    // Espera automática do Playwright pelo processamento do clique na UI
     await this.page.waitForLoadState('domcontentloaded');
   }
 
@@ -54,7 +48,6 @@ export class CartPage {
       return text.trim();
     }
     
-    // Fallback de segurança: busca qualquer número isolado próximo ao botão +
     const containerText = await this.increaseButton.locator('..').textContent();
     const match = containerText?.match(/\d+/);
     return match ? match[0] : '1';
