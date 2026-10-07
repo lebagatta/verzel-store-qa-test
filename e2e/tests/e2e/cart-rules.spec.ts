@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { CartPage } from '../../pages/CartPage'; // ✅ 2 níveis
+import { CartPage } from '../../pages/CartPage';
+
 test.describe('Regras do Carrinho e Frete', () => {
   let cartPage: CartPage;
 
@@ -16,37 +17,41 @@ test.describe('Regras do Carrinho e Frete', () => {
   });
 
   test('Não deve permitir ultrapassar 5 unidades do mesmo produto', async ({ page }) => {
-    // Busca o botão de incrementar pela classe ou filtrando por texto '+'
-    const increaseBtn = page.locator('button').filter({ hasText: '+' }).first();
+    const MAX_ALLOWED_QUANTITY = 5;
 
-    // Aguarda o botão estar pronto na tela
-    await increaseBtn.waitFor({ state: 'visible' });
-
-    // Clica 5 vezes para tentar ultrapassar o limite (já começa em 1 unidade)
-    for (let i = 0; i < 5; i++) {
-      if (await increaseBtn.isEnabled()) {
-        await increaseBtn.click();
-        await page.waitForTimeout(200);
+    // Clica até atingir o limite de 5 unidades (inicia com 1 no carrinho)
+    for (let i = 1; i < MAX_ALLOWED_QUANTITY; i++) {
+      if (!(await cartPage.isIncreaseButtonDisabled())) {
+        await cartPage.increaseQuantity();
       }
     }
 
-    // Valida se o botão ficou desabilitado ou se a quantidade permaneceu em 5
-    await expect(increaseBtn).toBeDisabled();
+    // 1. Valida explicitamente que a quantidade real exibida na UI é de 5 unidades
+    const currentQuantity = await cartPage.getQuantityText();
+    expect(currentQuantity.trim()).toBe(MAX_ALLOWED_QUANTITY.toString());
+
+    // 2. Valida se o botão de incrementar ficou desabilitado após atingir o limite
+    await expect(cartPage.getIncreaseButtonLocator()).toBeDisabled();
   });
 
   test('Deve aplicar frete grátis para compras acima de R$ 200,00', async ({ page }) => {
-    const increaseBtn = page.locator('button').filter({ hasText: '+' }).first();
-    await increaseBtn.waitFor({ state: 'visible' });
+    const FREE_SHIPPING_THRESHOLD = 200.00;
+    
+    // Captura o preço unitário dinamicamente do Page Object Model
+    const unitPrice = await cartPage.getUnitPrice(); // Ex: R$ 59,90
+    
+    // Cálculo explícito de quantos itens adicionais precisamos incrementar para ultrapassar R$ 200,00
+    // Como o carrinho já inicia com 1 item, calculamos as adições necessárias:
+    const requiredTotalItems = Math.ceil(FREE_SHIPPING_THRESHOLD / unitPrice);
+    const clicksNeeded = requiredTotalItems - 1;
 
-    // Produto custa R$ 59,90. 4 unidades = R$ 239,60 (ultrapassa R$ 200,00)
-    for (let i = 0; i < 3; i++) {
-      if (await increaseBtn.isEnabled()) {
-        await increaseBtn.click();
-        await page.waitForTimeout(200);
+    for (let i = 0; i < clicksNeeded; i++) {
+      if (!(await cartPage.isIncreaseButtonDisabled())) {
+        await cartPage.increaseQuantity();
       }
     }
 
-    // Valida se o frete mudou para R$ 0,00 ou exibe a mensagem de Frete Grátis
-    await expect(page.getByText(/r\$\s?0,00|grátis/i).first()).toBeVisible();
+    // Valida se o frete mudou para R$ 0,00 / Grátis usando a verificação de estado do Playwright
+    await expect(cartPage.getFreeShippingLocator()).toBeVisible();
   });
 });
