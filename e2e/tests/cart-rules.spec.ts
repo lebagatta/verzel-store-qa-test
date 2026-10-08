@@ -17,17 +17,16 @@ test.describe('Regras do Carrinho e Frete', () => {
 
     const MAX_ALLOWED_QUANTITY = 5;
 
-    // Incrementa até o limite máximo permitido de 5 unidades
-    const increaseBtn = page.getByRole('button', { name: '+' }).or(page.locator('button:has-text("+")')).first();
-
     for (let i = 1; i < MAX_ALLOWED_QUANTITY; i++) {
-      if (await increaseBtn.isEnabled()) {
-        await increaseBtn.click();
+      if (!(await cartPage.isIncreaseButtonDisabled())) {
+        await cartPage.increaseQuantity();
       }
     }
 
-    // Verifica que o botão de incrementar ficou desabilitado
-    await expect(increaseBtn).toBeDisabled();
+    const currentQuantity = await cartPage.getQuantityText();
+    expect(currentQuantity.trim()).toBe(MAX_ALLOWED_QUANTITY.toString());
+
+    await expect(cartPage.getIncreaseButtonLocator()).toBeDisabled();
   });
 
   test.describe('Análise de Valor Limite - Frete Grátis (R$ 200,00)', () => {
