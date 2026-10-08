@@ -1,24 +1,19 @@
 {
   "name": "verzel-store-qa-test",
   "version": "1.0.0",
-  "description": "Projeto de automação e documentação de testes de garantia da qualidade para a Verzel Store, cobrindo as funcionalidades de aplicação de cupons de desconto e regras de cálculo de frete grátis.",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "description": "Projeto de automação e documentação de testes de garantia da qualidade para a Verzel Store.",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "typescript": "^5.6.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lebagatta/verzel-store-qa-test.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/lebagatta/verzel-store-qa-test/issues"
-  },
-  "homepage": "https://github.com/lebagatta/verzel-store-qa-test#readme"
+  "license": "ISC"
 }
