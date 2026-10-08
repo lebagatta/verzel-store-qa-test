@@ -18,6 +18,39 @@ Este documento registra a execução prática dos cenários de teste mapeados na
 
 ---
 
+## 1.1 Execução da Suíte Automatizada (E2E - Playwright)
+
+Além da validação manual (Dia 1), a suíte de testes end-to-end foi automatizada
+com Playwright + TypeScript, cobrindo os cenários de cupom, regras de frete/
+limite de unidades e carregamento da aplicação.
+
+**Comando executado:** `npx playwright test`
+
+**Resultado:**
+
+\```
+Running 9 tests using 2 workers
+
+  ✓  1 …cobrar frete para subtotal de R$ 199,90 (abaixo do limite de R$ 200,00) (2.4s)
+  ✓  2 …Não deve permitir ultrapassar 5 unidades do mesmo produto (2.8s)
+  ✓  3 …Deve conceder frete grátis para subtotal de R$ 200,00 (limite exato) (1.6s)
+  ✓  4 …Deve conceder frete grátis para subtotal acima de R$ 200,00 (1.5s)
+  ✓  5 …Deve aplicar cupom de desconto com sucesso (1.6s)
+  ✓  6 …Deve aceitar cupom em letras minúsculas ou com espaços (insensível) (1.3s)
+  ✓  7 …Deve exibir mensagem de erro ao informar cupom inexistente (1.2s)
+  ✓  8 …Deve exibir mensagem de erro ao informar cupom expirado (1.2s)
+  ✓  9 …deve carregar a página inicial da loja (908ms)
+
+  9 passed (11.3s)
+\```
+
+**Taxa de Sucesso:** 100% (9/9 cenários automatizados aprovados)
+
+![Execução no Terminal](assets/evidencia-e2e-execucao-terminal.png)
+![Relatório HTML Playwright](assets/evidencia-e2e-relatorio-html.png)
+
+---
+
 ## 2. Galeria de Evidências
 
 ### CT-01 e CT-02: Aplicação de Cupom Válido com Trimming
