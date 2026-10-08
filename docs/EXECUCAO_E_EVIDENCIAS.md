@@ -26,6 +26,25 @@ limite de unidades e carregamento da aplicação.
 
 **Comando executado:** `npx playwright test`
 
+---
+
+## 1.2 Testes Exploratórios
+
+Além dos cenários roteirizados, foi conduzida uma sessão de teste exploratório
+(charter livre), buscando comportamentos não previstos na documentação formal.
+
+| # | O que foi tentado | Resultado observado |
+| :--- | :--- | :--- |
+| E-01 | Inserção de cupom com caracteres especiais e emojis | Sistema rejeitou corretamente, exibindo mensagem de cupom inválido |
+| E-02 | Duplo clique rápido e repetido no botão de incremento de quantidade | Incremento ocorreu normalmente até o limite de 5 unidades; o bloqueio no limite máximo funcionou mesmo sob cliques rápidos, sem duplicar ou ultrapassar a quantidade |
+| E-03 | Atualização da página (F5) com o carrinho preenchido | Os itens do carrinho foram mantidos corretamente após o reload |
+| E-04 | Uso do botão "voltar" do navegador durante a navegação | Sistema respondeu normalmente, retornando à tela anterior sem erros ou perda de estado |
+| E-05 | Campos obrigatórios do formulário de checkout preenchidos apenas com espaços em branco | Sistema identificou o campo como inválido e exibiu a recomendação de preenchimento correto |
+
+**Conclusão:** Nenhum comportamento divergente ou defeito foi identificado
+durante a sessão exploratória. O sistema se manteve estável e consistente
+mesmo sob interações fora do fluxo padrão documentado.
+
 **Resultado:**
 
 \```
@@ -50,6 +69,19 @@ Running 9 tests using 2 workers
 ![Relatório HTML Playwright](assets/evidencia-e2e-relatorio-html.png)
 
 ---
+
+## 1.3 Execução da Suíte Automatizada (E2E - Playwright)
+
+Além da validação manual e exploratória, a suíte de testes end-to-end foi
+automatizada com Playwright + TypeScript, cobrindo os cenários de cupom,
+regras de frete/limite de unidades e carregamento da aplicação.
+
+**Comando executado:** `npx playwright test`
+
+**Resultado:** 9 de 9 cenários aprovados (100%)
+
+![Execução no Terminal](assets/evidencia-e2e-execucao-terminal.png)
+![Relatório HTML Playwright](assets/evidencia-e2e-relatorio-html.png)
 
 ## 2. Galeria de Evidências
 
