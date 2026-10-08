@@ -16,13 +16,14 @@ test.describe('Validação de Cupons de Desconto', () => {
   });
 
   test('Deve aplicar cupom de desconto com sucesso', async ({ page }) => {
-    await cartPage.applyCoupon('30ANOS');
+    await cartPage.applyCoupon('BEMVINDO10');
     // Verifica se a linha/label de Desconto é exibida no resumo do pedido
     await expect(page.locator('*:has-text("Desconto")').last()).toBeVisible();
   });
 
   test('Deve aceitar cupom em letras minúsculas ou com espaços (insensível)', async ({ page }) => {
-    await cartPage.applyCoupon('  30anos  ');
+    await cartPage.applyCoupon('  bemvindo10  ');
+
     await expect(page.locator('*:has-text("Desconto")').last()).toBeVisible();
   });
 
